@@ -58,8 +58,10 @@ for i in range(datos.shape[0]):
     df.loc[df.Fecha == datos.loc[i,"Fecha(dd/mm/YYYY)"], "Ingreso"] = datos.loc[i,"Monto"]
     df.loc[df.Fecha == datos.loc[i,"Fecha(dd/mm/YYYY)"], "Motivo"] = datos.loc[i,"Motivo"]
 
-df["Total"]=df['Pasaje'] * df["Factor"]
-df["GASTO TOTAL MES"] = None
+df_aux = df[["Pasaje","Factor","Gasto"]]
+df_aux = df_aux.fillna(0.0)
+df["Total"] = df_aux['Pasaje'] * df_aux["Factor"] + df_aux["Gasto"]
+df["GASTO TOTAL MES"] = None  
 
 total_mes = df.groupby(['Mes'])['Total'].sum().reset_index()
 for i in range(total_mes.shape[0]):
